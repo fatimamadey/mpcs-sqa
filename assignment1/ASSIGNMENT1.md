@@ -321,7 +321,7 @@ https://github.com/fatimamadey/mpcs-sqa/blob/main/assignment1/config.pylintrc
 *Source: https://pylint.pycqa.org/en/stable/user_guide/configuration/index.html*
 
 #### Screenshots of Terminal
-<img src="./linter_output.png" alt="Linter Screenshot" width="50%">
+<img src="./linter_output.png" alt="Linter Screenshot" width="100%">
 
 ## Use of External Resources
 - Used Claude AI to generate graphs based on node description and flow.
