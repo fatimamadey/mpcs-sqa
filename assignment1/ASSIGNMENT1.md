@@ -58,14 +58,14 @@ Consider a simplified vending machine with the following states:
 #### Test Cases
 | Test ID| Test Name                     | Current State      | Input / Action          | Expected Next State | Expected Behavior                      |
 |--------|-------------------------------|--------------------|-------------------------|---------------------|----------------------------------------|
-| 01    | vaildCoinAccepted              | Idle               | Insert coin             | Accepting Coins     | Coin accepted                          |
-| 02    | multipleCoinsAccepted          | Accepting Coins    | Insert another coin     | Accepting Coins     | Coin accepted                          |
-| 03    | successfulSelection            | Accepting Coins    | Select product          | Dispensing Product  | Product dispensed                      |
-| 04    | successfulPurchase             | Dispensing Product | Dispense complete       | Idle                | Ready for next customer                |
-| 05    | validOutOfStock                | Idle               | Stock = 0               | Out of Stock        | "Out of Stock" message                 |
-| 06    | invalidSelectionBeforePayment   | Idle               | Select product          | Idle                | Error / ignore (no product selected)   |
-| 07    | invalidInsertionDuringSelection      | Dispensing         | Insert Coin             | Idle                | Reject Coin or Store for Next Iteration|
-| 08    | fullCycle                      | Idle               | Coin → select → dispense| Idle                | Complete transaction                   |
+| 1    | vaildCoinAccepted              | Idle               | Insert coin             | Accepting Coins     | Coin accepted                          |
+| 2    | multipleCoinsAccepted          | Accepting Coins    | Insert another coin     | Accepting Coins     | Coin accepted                          |
+| 3    | successfulSelection            | Accepting Coins    | Select product          | Dispensing Product  | Product dispensed                      |
+| 4    | successfulPurchase             | Dispensing Product | Dispense complete       | Idle                | Ready for next customer                |
+| 5    | validOutOfStock                | Idle               | Stock = 0               | Out of Stock        | "Out of Stock" message                 |
+| 6    | invalidSelectionBeforePayment   | Idle               | Select product          | Idle                | Error / ignore (no product selected)   |
+| 7    | invalidInsertionDuringSelection      | Dispensing         | Insert Coin             | Idle                | Reject Coin or Store for Next Iteration|
+| 8    | fullCycle                      | Idle               | Coin → select → dispense| Idle                | Complete transaction                   |
 
 ## Exercise 2 - Equivalence Partitioning and Boundary Value Analysis
 ### Shipping Cost Calculator
@@ -104,7 +104,7 @@ Your answer must include
 #### Boundary Values
 - Minimum valid: 0, 1 (if including invalid -1)
 - 5 lb cutoff: 4, 5, 6
-- 20 lb cutoff: 19, 20, 20
+- 20 lb cutoff: 19, 20, 21
 - Maximum valid: 49, 50, (if including invalid 51)
 
 #### Test Case Table
@@ -198,7 +198,7 @@ elif drugClass == B:
 
 ### Deliverables
 #### Program Flow Graph
-<img src="./reimbursement_tree.png" alt="State Diagram" width="50%">
+<img src="./reimbursement_tree.png" alt="Reimbursement Diagram" width="50%">
 
 #### Coverage-Oriented Test Case Table
 - Statement Coverage
@@ -286,7 +286,7 @@ For the `422` case, you may assume a documented business rule such as out-of-sto
 | 1  | Valid normal order               | Authorization: Bearer `<valid-token>`  | `{"customer_id":"C123","items":[{"product_id":"P1","quantity":2}],"delivery_date":"2026-04-20","priority":"normal"}`                        | 200             | `{"order_id": "...", "status": "created"}`       | All fields valid                  |
 | 2  | Valid rush order                 | Authorization: Bearer `<valid-token>`  | same as 1 but let `"priority":"rush"`                                                                                                       | 200             | `{"order_id": "...", "status": "created"}`       | Business rule allows rush         |
 | 3  | Invalid – missing customer_id   | Authorization: Bearer `<valid-token>`  | `{"items":[...],"delivery_date":"2026-04-20","priority":"normal"}`                                                                          | 400             | `{"error": "missing field: customer_id"}`        | Required field (API spec)         |
-| 4  | Invalid – type for product_id is integer    | Authorization: Bearer `<valid-token>`  | `{"customer_id":"C123","items":[{"product_id": 1,"quantity":1}],"delivery_date":"2026-04-20","priority":"normal"}`                       | 400             | `{"error": "quantity must be positive"}`         | Data validation                   |
+| 4  | Invalid – type for product_id is integer    | Authorization: Bearer `<valid-token>`  | `{"customer_id":"C123","items":[{"product_id": 1,"quantity":1}],"delivery_date":"2026-04-20","priority":"normal"}`                       | 400             | `{"error": "quantity must be positive"}`         | Type Error                  |
 | 5  | Business rule – out of stock     | Authorization: Bearer `<valid-token>`  | same as 1 but product is documented out-of-stock                                                                                       | 422             | `{"error": "out of stock"}`                      | Documented business rule          |
 | 6  | Security – missing token         | (no Authorization header)            | same as 1                                                                                                                              | 401             | `{"error": "unauthorized"}`                      | API spec requires token           |
 
@@ -312,14 +312,21 @@ Examples include ESLint, Pylint, Flake8, PMD, Checkstyle, or Cppcheck.
 - Repeating the same issue many times does not satisfy the distinctness requirement.
 
 ### Deliverables
-the source code file(s) showing the issues;
-the linter configuration file;
-screenshots of the terminal or tool output showing the detected issues.
+#### Source Code File
+https://github.com/fatimamadey/mpcs-sqa/blob/main/assignment1/exercise6.py
 
+#### Linter Configuration File
+https://github.com/fatimamadey/mpcs-sqa/blob/main/assignment1/config.pylintrc
+
+*Source: https://pylint.pycqa.org/en/stable/user_guide/configuration/index.html*
+
+#### Screenshots of Terminal
+<img src="./linter_output.png" alt="Linter Screenshot" width="50%">
 
 ## Use of External Resources
 - Used Claude AI to generate graphs based on node description and flow.
 - Also used Claude to do some formatting for my markdown file.
-- Used copiolet autocomplete to generate my python code for exercies 6.
+- Used copiolet autocomplete to help me write a function that i later added linter errors to for exercies 6.
 - Asked Claude to grade my assignment to catch any small errors I might have made.
-- Claude convo ()
+    - made a few typos but logic was good (also claude is a harsh grader...)
+- Claude convo (https://claude.ai/share/14393ff8-b06f-46d1-b219-079555559aa3)
