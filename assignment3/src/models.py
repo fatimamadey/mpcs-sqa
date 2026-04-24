@@ -4,14 +4,12 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
-from assignment3.src.exceptions import InvalidTaskError
-
+from src.exceptions import InvalidTaskError
 
 class Priority(Enum):
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
-
 
 class Task:
     def __init__(

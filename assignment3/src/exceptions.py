@@ -2,7 +2,7 @@
 
 
 class TaskNotFoundError(Exception):
-    """Raised when a task does not exist."""
+    """Raised when a task with a given ID does not exist."""
     pass
 
 
