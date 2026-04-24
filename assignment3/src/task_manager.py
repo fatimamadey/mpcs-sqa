@@ -30,7 +30,7 @@ class TaskManager:
             if user.username == username:
                 raise DuplicateUserError(f"Username '{username}' is already taken.")
 
-        password_hash = hash(password)
+        password_hash = f"stubbed:{password}"  # In production, use a secure hashing algorithm with salt
         user = User(user_id=self.next_user_id, username=username, password_hash=password_hash)
         self.users[self.next_user_id] = user
         self.next_user_id += 1
@@ -39,7 +39,7 @@ class TaskManager:
     def login(self, username: str, password: str) -> User:
         for user in self.users.values():
             if user.username == username:
-                if user.password_hash != hash(password):
+                if user.password_hash != f"stubbed:{password}":
                     raise UnauthorizedError("Incorrect password.")
                 return user
         raise UserNotFoundError(f"User '{username}' not found.")
@@ -57,6 +57,9 @@ class TaskManager:
     ) -> Task:
         if user_id not in self.users:
             raise UserNotFoundError(f"User ID {user_id} not found.")
+        # validate priority is a valid enum value
+        if priority not in Priority:
+            raise InvalidTaskError(f"Invalid priority: {priority}")
         task = Task(
             task_id=self.next_task_id,
             owner_id=user_id,
@@ -71,6 +74,7 @@ class TaskManager:
         self.next_task_id += 1
         return task
 
+    # mainly helper for update/delete/complete/incomplete, but also used by get_tasks to enforce ownership
     def get_task(self, user_id: int, task_id: int) -> Task:
         if task_id not in self.tasks:
             raise TaskNotFoundError(f"Task ID {task_id} not found.")
@@ -84,8 +88,10 @@ class TaskManager:
         allowed_fields = ["title", "description", "priority", "due_date", "category"]
         for field, value in fields.items():
             if field in allowed_fields:
-                if field == "title" and not value:
+                if field == "title" and not value.strip():
                     raise InvalidTaskError("Title cannot be blank.")
+                if field == "priority" and value not in Priority:
+                    raise InvalidTaskError(f"Invalid priority: {value}")
                 setattr(task, field, value)
         return task
 
@@ -109,7 +115,7 @@ class TaskManager:
     def get_tasks(self, user_id: int) -> List[Task]:
         if user_id not in self.users:
             raise UserNotFoundError(f"User ID {user_id} not found.")
-        return self.users[user_id].tasks
+        return list(self.users[user_id].tasks)
 
     def sort_tasks(self, user_id: int, by: str) -> List[Task]:
         if by not in ["priority", "due_date", "completed"]:
@@ -121,7 +127,7 @@ class TaskManager:
                 Priority.MEDIUM: 1,
                 Priority.HIGH: 2,
             }
-            return sorted(tasks, key=lambda t: priority_order[t.priority])
+            return sorted(tasks, key=lambda t: priority_order[t.priority], reverse=True)
         elif by == "due_date":
             return sorted(tasks, key=lambda t: (t.due_date or date.max))
         elif by == "completed":

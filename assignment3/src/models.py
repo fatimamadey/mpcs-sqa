@@ -22,7 +22,7 @@ class Task:
         due_date: Optional[date] = None,
         category: str = "",
     ):
-        if not title:
+        if not title.strip():
             raise InvalidTaskError("Title cannot be blank.")
         
         self.task_id = task_id

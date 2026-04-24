@@ -7,10 +7,12 @@ pip install pytest pytest-cov
 
 ## Run tests
 ```bash
-pytest tests/ -v
+python3 -m pytest tests/ -v
 ```
 
 ## Run coverage report
 ```bash
-pytest --cov=src --cov-branch --cov-report=term-missing tests/
+python3 -m pytest --cov=src --cov-branch --cov-report=term-missing tests/
 ```
+
+---
