@@ -91,9 +91,9 @@ def test_complete_task_sets_completed_true(registered_user):
 
     # Act 
     manager.complete_task(user_id=user.user_id, task_id=task.task_id)
+    tasks = manager.get_tasks(user_id=user.user_id)
 
     # Assert 
-    tasks = manager.get_tasks(user_id=user.user_id)
     assert tasks[0].completed is True
 
 def test_incomplete_task_sets_completed_false(registered_user):
@@ -326,7 +326,9 @@ def test_set_reminder_delegates_to_reminder_service(registered_user):
     from unittest.mock import MagicMock
     manager, user = registered_user
     mock_reminder = MagicMock()
-    manager._reminder_service = mock_reminder
+    manager = TaskManager(reminder_service=mock_reminder)
+    user = manager.register_user(username="testuser", password="password123")
+    
     task = manager.create_task(user_id=user.user_id, title="Test Task")
     message = "Don't forget your task!"
 

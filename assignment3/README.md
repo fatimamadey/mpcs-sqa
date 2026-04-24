@@ -10,9 +10,8 @@ pip install pytest pytest-cov
 python3 -m pytest tests/ -v
 ```
 
-## Run coverage report
-```bash
-python3 -m pytest --cov=src --cov-branch --cov-report=term-missing tests/
+## Run coverage report and generate HTML (tables will be in index.html)
+``` bash
+python3 -m pytest --cov=src --cov-branch --cov-report=term --cov-report=html tests/
 ```
-
 ---
