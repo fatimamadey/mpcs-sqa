@@ -4,6 +4,8 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
+from assignment3.src.exceptions import InvalidTaskError
+
 
 class Priority(Enum):
     LOW = "LOW"
@@ -22,20 +24,28 @@ class Task:
         due_date: Optional[date] = None,
         category: str = "",
     ):
-        # TODO: validate title is non-empty, raise InvalidTaskError if not
-        # TODO: assign all fields; set completed = False by default
-        pass
+        if not title:
+            raise InvalidTaskError("Title cannot be blank.")
+        
+        self.task_id = task_id
+        self.owner_id = owner_id
+        self.title = title
+        self.description = description
+        self.priority = priority
+        self.due_date = due_date
+        self.category = category
+        self.completed = False
 
     def mark_complete(self):
-        # TODO: set self.completed = True
-        pass
+        self.completed = True
 
     def mark_incomplete(self):
-        # TODO: set self.completed = False
-        pass
+        self.completed = False
 
 
 class User:
     def __init__(self, user_id: int, username: str, password_hash: str):
-        # TODO: assign fields; initialize tasks as empty list
-        pass
+        self.user_id = user_id
+        self.username = username
+        self.password_hash = password_hash
+        self.tasks = []
