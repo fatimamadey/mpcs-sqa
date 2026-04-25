@@ -348,3 +348,4 @@ def test_delete_task_then_get_raises_task_not_found_error(registered_user):
     with pytest.raises(TaskNotFoundError):
         manager.get_task(user_id=user.user_id, task_id=task.task_id)
 
+
