@@ -32,7 +32,7 @@ def _make_driver(browser_name: str):
 # Parametrize all tests with a "browser" fixture, which will be set to the value of the --browser option (or both if not specified)
 def pytest_addoption(parser):
     parser.addoption(
-        "--browser",
+        "--sel-browser",
         action="store",
         default=None,
         help="Run only this browser (chrome | safari). Omit to run both.",
@@ -42,7 +42,7 @@ def pytest_addoption(parser):
 def pytest_generate_tests(metafunc):
     """Inject the 'browser' fixture parameter for every test that uses it."""
     if "browser" in metafunc.fixturenames:
-        selected = metafunc.config.getoption("--browser")
+        selected = metafunc.config.getoption("--sel-browser")
         browsers = [selected] if selected else ["chrome", "safari"]
         metafunc.parametrize("browser", browsers)
 
