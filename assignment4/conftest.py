@@ -4,7 +4,7 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.safari.options import Options as SafariOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 BASE_URL = "https://www.demoblaze.com"
 
@@ -20,11 +20,12 @@ def _make_driver(browser_name: str):
         options.add_argument("--window-size=1280,900")
         return webdriver.Chrome(options=options)
 
-    if browser_name == "safari":
-        # Safari must be run with Allow Remote Automation enabled in the
-        # Develop menu.  SafariDriver does NOT support headless mode.
-        options = SafariOptions()
-        return webdriver.Safari(options=options)
+    if browser_name == "firefox":
+        options = FirefoxOptions()
+        options.add_argument("--headless")
+        options.add_argument("--width=1280")
+        options.add_argument("--height=900")
+        return webdriver.Firefox(options=options)
 
     raise ValueError(f"Unsupported browser: {browser_name}")
 
@@ -35,7 +36,7 @@ def pytest_addoption(parser):
         "--sel-browser",
         action="store",
         default=None,
-        help="Run only this browser (chrome | safari). Omit to run both.",
+        help="Run only this browser (chrome | firefox). Omit to run both.",
     )
 
 
@@ -43,7 +44,7 @@ def pytest_generate_tests(metafunc):
     """Inject the 'browser' fixture parameter for every test that uses it."""
     if "browser" in metafunc.fixturenames:
         selected = metafunc.config.getoption("--sel-browser")
-        browsers = [selected] if selected else ["chrome", "safari"]
+        browsers = [selected] if selected else ["chrome", "firefox"]
         metafunc.parametrize("browser", browsers)
 
 

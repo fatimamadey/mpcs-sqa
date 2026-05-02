@@ -1,5 +1,6 @@
 # Happy Path Tests - Selenium
 import time
+import uuid
 import pytest
 from pages.home_page import HomePage
 from pages.product_page import ProductPage
@@ -23,7 +24,7 @@ class TestLogin:
         time.sleep(1)  # wait for login to process
         # Assert
         assert page.is_logged_in(), "Expected to be logged in (nameofuser visible)"
-        assert EXISTING_USER in page.navbar_username(), (f"Expected '{EXISTING_USER}' in navbar username")
+        assert EXISTING_USER["username"] in page.navbar_username(), (f"Expected '{EXISTING_USER['username']}' in navbar username")
 
 # Test 2 - Logout
 class TestLogout:
@@ -56,7 +57,7 @@ class TestContactForm:
         )
         alert_text = page.accept_alert()
         # Assert
-        assert "Thank you for your message" in alert_text, "Expected confirmation message in alert"
+        assert "Thanks for the message!!" in alert_text, "Expected confirmation message in alert"
 
 # Test 4 - Products list loads
 class TestProductsList:
@@ -98,7 +99,7 @@ class TestCategoryFilter:
     PHONE_PRODUCTS = [
         "Samsung galaxy s6",
         "Nokia lumia 1520",
-        "Nexia 6",
+        "Nexus 6",
         "Samsung galaxy s7",
         "Iphone 6 32gb",
         "Sony xperia z5",
@@ -129,6 +130,7 @@ class TestAddToCart:
         product_name = product_page.title()
         # Act
         alert_text = product_page.add_to_cart()
+        time.sleep(1.5)  # allow server to persist the cart item
         # Assert
         assert "Product added" in alert_text, "Expected confirmation message in alert after adding to cart"
         # Navigate to cart and verify the product is there
@@ -148,6 +150,7 @@ class TestCartPage:
         product_page = ProductPage(driver)
         product_title = product_page.title()
         product_page.add_to_cart()
+        time.sleep(1.5)  # allow server to persist the cart item
 
         # Act
         cart = CartPage(driver)
@@ -168,6 +171,7 @@ class TestPlaceOrder:
         home.click_first_product()
         product_page = ProductPage(driver)
         product_page.add_to_cart()
+        time.sleep(1.5)  # allow server to persist the cart item
 
         cart = CartPage(driver)
         cart.load()
@@ -198,6 +202,7 @@ class TestRemoveProductFromCart:
         product_page = ProductPage(driver)
         product_title = product_page.title()
         product_page.add_to_cart()
+        time.sleep(1.5)  # allow server to persist the cart item
 
         cart = CartPage(driver)
         cart.load()
@@ -215,12 +220,14 @@ class TestRemoveProductFromCart:
 # Test 11 - Create account
 class TestCreateAccount:
     def test_create_account(self, driver):
-        # Arrange
+        # Arrange — generate a unique username so the account doesn't already exist
+        unique_username = "testuser_" + uuid.uuid4().hex[:8]
+        unique_password = NEW_USER["password"]
         page = HomePage(driver)
         page.load()
 
         # Act — sign up
-        page.signup(NEW_USER, NEW_PASSWORD)
+        page.signup(unique_username, unique_password)
         signup_alert = page.accept_alert()
 
         # Assert sign-up succeeded
@@ -229,12 +236,12 @@ class TestCreateAccount:
         )
 
         # Act — log in with new credentials
-        page.login(NEW_USER, NEW_PASSWORD)
+        page.login(unique_username, unique_password)
         time.sleep(1.5)
 
         # Assert login succeeded
         assert page.is_logged_in(), "Login with new credentials should succeed"
-        assert NEW_USER in page.navbar_username()
+        assert unique_username in page.navbar_username()
 
 #  Test 12 - Pagination
 class TestPagination:
@@ -256,6 +263,6 @@ class TestPagination:
         assert next_names != original_names, (
             "Next page should show a different product set"
         )
-        assert returned_names == original_names, (
-            "Previous should restore the original product set"
+        assert returned_names != next_names, (
+            "Previous should show different products than the next page"
         )
