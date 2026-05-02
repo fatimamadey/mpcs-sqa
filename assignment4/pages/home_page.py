@@ -1,0 +1,1 @@
+# Home Page - login, logout, signup, contact form, product list, category filter, pagination
