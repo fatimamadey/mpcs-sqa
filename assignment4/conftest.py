@@ -41,8 +41,8 @@ def pytest_addoption(parser):
 
 
 def pytest_generate_tests(metafunc):
-    """Inject the 'browser' fixture parameter for every test that uses it."""
-    if "browser" in metafunc.fixturenames:
+    """Inject the 'browser' fixture parameter for every Selenium test that uses it."""
+    if "browser" in metafunc.fixturenames and "driver" in metafunc.fixturenames:
         selected = metafunc.config.getoption("--sel-browser")
         browsers = [selected] if selected else ["chrome", "firefox"]
         metafunc.parametrize("browser", browsers)

@@ -8,7 +8,7 @@ DEFAULT_TIMEOUT = 10
 class BasePage:
     def __init__(self, driver):
         self.driver = driver # driver is the Selenium WebDriver instance (e.g., Chrome, Safari)
-        self.wait = WebDriverWait(driver, DEFAULT_TIMEOUT) # wait 12 sec before throwing a TimeoutException
+        self.wait = WebDriverWait(driver, DEFAULT_TIMEOUT) # wait 10 sec before throwing a TimeoutException
     
     # Nav Helpers
     def open(self, path: str = ""):
@@ -24,9 +24,6 @@ class BasePage:
     def wait_for_clickable(self, locator):
         return self.wait.until(EC.element_to_be_clickable(locator))
 
-    def wait_for_text_in_element(self, locator, text: str):
-        return self.wait.until(EC.text_to_be_present_in_element(locator, text))
-    
     # Alert Helpers
     def accept_alert(self) -> str:
         """Wait for an alert, capture its text, then dismiss it."""
@@ -35,13 +32,6 @@ class BasePage:
         alert.accept()
         return text
 
-    def dismiss_alert(self) -> str:
-        """Wait for an alert, capture its text, then dismiss it."""
-        alert = self.wait.until(EC.alert_is_present())
-        text = alert.text
-        alert.dismiss()
-        return text
-    
     # Nav Bar State Helpers
     def navbar_username(self) -> str:
         """Return the text of the logged-in username element in the navbar."""

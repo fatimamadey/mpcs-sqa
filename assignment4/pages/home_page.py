@@ -1,7 +1,6 @@
 # Home Page - login, logout, signup, contact form, product list, category filter, pagination
 import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 
 class HomePage(BasePage):
@@ -10,7 +9,6 @@ class HomePage(BasePage):
     NAV_LOGOUT     = (By.ID, "logout2")
     NAV_SIGNUP     = (By.ID, "signin2")
     NAV_CONTACT    = (By.XPATH, "//a[text()='Contact']")
-    NAV_CART       = (By.ID, "cartur")
     LOGIN_MODAL    = (By.ID, "logInModal")
     LOGIN_USER     = (By.ID, "loginusername")
     LOGIN_PASS     = (By.ID, "loginpassword")
@@ -29,8 +27,6 @@ class HomePage(BasePage):
     PRODUCT_LINKS  = (By.CSS_SELECTOR, ".card-title a")
 
     CAT_PHONES     = (By.XPATH, "//a[text()='Phones']")
-    CAT_LAPTOPS    = (By.XPATH, "//a[text()='Laptops']")
-    CAT_MONITORS   = (By.XPATH, "//a[text()='Monitors']")
 
     NEXT_BTN       = (By.ID, "next2")
     PREV_BTN       = (By.ID, "prev2")
@@ -91,15 +87,6 @@ class HomePage(BasePage):
         """Return the text of every visible product link."""
         return [el.text for el in self.driver.find_elements(*self.PRODUCT_LINKS)]
 
-    def click_product_by_name(self, name: str):
-        """Click the first product tile whose title matches name."""
-        link = self.wait.until(
-            EC.element_to_be_clickable(
-                (By.XPATH, f"//a[normalize-space(text())='{name}']")
-            )
-        )
-        link.click()
-
     def click_first_product(self):
         """Click the very first product tile (any category)."""
         self.wait_for_clickable(self.PRODUCT_LINKS).click()
@@ -110,18 +97,10 @@ class HomePage(BasePage):
         # Brief pause for the AJAX filter to settle
         time.sleep(1.5)
 
-    def filter_by_laptops(self):
-        self.wait_for_clickable(self.CAT_LAPTOPS).click()
-        time.sleep(1.5)
-
-    def filter_by_monitors(self):
-        self.wait_for_clickable(self.CAT_MONITORS).click()
-        time.sleep(1.5)
-
     # Pagination
     def click_next(self):
-            self.wait_for_clickable(self.NEXT_BTN).click()
-            time.sleep(1.5)
+        self.wait_for_clickable(self.NEXT_BTN).click()
+        time.sleep(1.5)
 
     def click_prev(self):
         self.wait_for_clickable(self.PREV_BTN).click()

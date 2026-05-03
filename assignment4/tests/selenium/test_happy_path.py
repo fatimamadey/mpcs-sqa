@@ -8,10 +8,7 @@ from pages.cart_page import CartPage
 
 # Shared test data
 EXISTING_USER = {"username": "fatima_dada", "password": "123456"}
-EXISTING_PASSWORD = "123456"
-NEW_USER = {"username": "newuser", "password": "newpassword123"}
-NEW_PASSWORD = "newpassword123"
-TEST_PRODUCT = "Samsung galaxy s6"
+NEW_USER_PASSWORD = "newpassword123"
 
 # Test 1 - Login (valid credentials)
 class TestLogin:
@@ -68,7 +65,7 @@ class TestProductsList:
         page.load()
         # Assert
         count = page.product_tile_count()
-        assert count > 0, "Expected at least one product tile to be visible"
+        assert count >= 9, f"Expected at least 9 product tiles on the home page, got {count}"
 
 # Test 5 - Product details page
 class TestProductDetailsPage:
@@ -222,7 +219,7 @@ class TestCreateAccount:
     def test_create_account(self, driver):
         # Arrange — generate a unique username so the account doesn't already exist
         unique_username = "testuser_" + uuid.uuid4().hex[:8]
-        unique_password = NEW_USER["password"]
+        unique_password = NEW_USER_PASSWORD
         page = HomePage(driver)
         page.load()
 
