@@ -1,2 +1,33 @@
 [flake8]
 # Q1 – Linter configuration for Django Poll App
+# Source: https://flake8.pycqa.org/en/latest/user/index.html
+
+max-line-length = 100
+max-complexity = 10
+
+# Directories to skip
+exclude =
+    .git,
+    __pycache__,
+    migrations,
+    .venv,
+    venv,
+    app/static,
+    app/templates,
+    htmlcov
+
+# Codes to check (keep default + extras)
+# E: PEP 8 errors
+# W: PEP 8 warnings
+# F: pyflakes (unused imports, undefined names, etc.)
+# C: McCabe complexity (requires --max-complexity)
+# B: bugbear (requires flake8-bugbear plugin)
+
+extend-select =
+    B,    # flake8-bugbear: opinionated warnings similar to pylint
+    B9,   # bugbear strict set
+
+# Per-file ignores
+per-file-ignores =
+    # Django migrations are auto-generated so we can ignore style issues
+    */migrations/*.py: E501, W503
