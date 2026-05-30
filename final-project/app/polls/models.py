@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 import secrets
+import os  # DELIBERATE LINT ERROR: unused import (F401) – for CI pipeline test
 
 
 class Poll(models.Model):
